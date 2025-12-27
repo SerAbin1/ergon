@@ -1,66 +1,66 @@
 /**
- * Design Tokens - Material 3 Expressive Dark Theme
+ * Design Tokens - M3 Expressive Dark Theme
  *
- * Dark mode exclusive with M3 color system and premium typography.
- * Uses desaturated accent colors for accessibility (WCAG AA).
+ * Blue & Black color scheme with M3 design system.
+ * Dark mode exclusive with desaturated accents for accessibility.
  */
 
-// M3 Dark Theme Color Palette
+// M3 Dark Theme Color Palette - Blue & Black
 export const colors = {
-    // Surface colors - dark greys with subtle elevation
+    // Surface colors - pure black to dark grey
     surface: {
-        dim: '#0E0E11',        // Lowest surface
-        default: '#141417',     // Base surface (#121212 equivalent)
-        bright: '#1A1A1F',      // Elevated surface
-        container: '#1F1F24',   // Container surface
-        containerHigh: '#29292E', // High container
-        containerHighest: '#333338', // Highest container
+        dim: '#000000',         // Pure black base
+        default: '#0A0A0C',     // Near-black
+        bright: '#121216',      // Subtle elevation
+        container: '#1A1A1F',   // Container surface
+        containerHigh: '#232329', // High container
+        containerHighest: '#2D2D33', // Highest container
     },
 
-    // Primary - Teal/Cyan (desaturated for dark theme)
+    // Primary - Electric Blue (desaturated for dark theme)
     primary: {
-        main: '#80CBC4',        // Primary color (tonal 200)
-        onPrimary: '#003731',   // Text on primary
-        container: '#004D43',   // Primary container
-        onContainer: '#A7F3EC', // Text on container
+        main: '#82B1FF',        // Primary color (A100 blue)
+        onPrimary: '#002F6C',   // Text on primary
+        container: '#004494',   // Primary container
+        onContainer: '#D1E4FF', // Text on container
     },
 
-    // Secondary - Soft violet
+    // Secondary - Soft blue-grey
     secondary: {
-        main: '#CCC2DC',        // Secondary (tonal 200)
-        onSecondary: '#332D41',
-        container: '#4A4458',
-        onContainer: '#E8DEF8',
+        main: '#B8C8DC',        // Secondary
+        onSecondary: '#233140',
+        container: '#394758',
+        onContainer: '#D4E3F8',
     },
 
-    // Tertiary - Warm rose
+    // Tertiary - Violet accent
     tertiary: {
-        main: '#EFB8C8',        // Tertiary (tonal 200)
-        onTertiary: '#492532',
-        container: '#633B48',
-        onContainer: '#FFD8E4',
+        main: '#CAC1FF',        // Tertiary
+        onTertiary: '#312B54',
+        container: '#48416C',
+        onContainer: '#E6DEFF',
     },
 
     // Error state
     error: {
-        main: '#F2B8B5',
-        onError: '#601410',
-        container: '#8C1D18',
-        onContainer: '#F9DEDC',
+        main: '#FFB4AB',
+        onError: '#690005',
+        container: '#93000A',
+        onContainer: '#FFDAD6',
     },
 
     // Text colors
     text: {
-        primary: '#E6E1E5',     // High emphasis
-        secondary: '#CAC4D0',   // Medium emphasis
-        tertiary: '#938F99',    // Low emphasis / disabled
-        inverse: '#1C1B1F',     // Text on light surfaces
+        primary: '#E4E2E6',     // High emphasis
+        secondary: '#C6C5CA',   // Medium emphasis
+        tertiary: '#8E8E93',    // Low emphasis / disabled
+        inverse: '#1B1B1F',     // Text on light surfaces
     },
 
     // Outline colors
     outline: {
-        default: '#938F99',
-        variant: '#49454F',
+        default: '#8E8E93',
+        variant: '#44444A',
     },
 
     // Semantic
@@ -80,7 +80,7 @@ export const spacing = {
     xxxl: 64,
 } as const;
 
-// Border radius - M3 uses larger radii for expressive feel
+// Border radius - M3 expressive
 export const borderRadius = {
     xs: 4,
     sm: 8,
@@ -91,31 +91,26 @@ export const borderRadius = {
     full: 9999,
 } as const;
 
-// Typography - Premium fonts for expressive design
+// Typography - Premium fonts
 export const typography = {
     fontFamily: {
-        display: 'Inter',       // Headlines & display text
-        body: 'Inter',          // Body text
-        mono: 'JetBrainsMono',  // Code & timer
+        display: 'Inter',
+        body: 'Inter',
+        mono: 'JetBrainsMono',
     },
     fontSize: {
-        // Display sizes
         displayLarge: 57,
         displayMedium: 45,
         displaySmall: 36,
-        // Headline sizes
         headlineLarge: 32,
         headlineMedium: 28,
         headlineSmall: 24,
-        // Title sizes
         titleLarge: 22,
         titleMedium: 16,
         titleSmall: 14,
-        // Body sizes
         bodyLarge: 16,
         bodyMedium: 14,
         bodySmall: 12,
-        // Label sizes
         labelLarge: 14,
         labelMedium: 12,
         labelSmall: 11,
@@ -142,11 +137,11 @@ export const typography = {
 // Elevation using tonal overlays (M3 style)
 export const elevation = {
     level0: 'transparent',
-    level1: 'rgba(208, 188, 255, 0.05)',  // Subtle primary tint
-    level2: 'rgba(208, 188, 255, 0.08)',
-    level3: 'rgba(208, 188, 255, 0.11)',
-    level4: 'rgba(208, 188, 255, 0.12)',
-    level5: 'rgba(208, 188, 255, 0.14)',
+    level1: 'rgba(130, 177, 255, 0.05)',  // Blue tint
+    level2: 'rgba(130, 177, 255, 0.08)',
+    level3: 'rgba(130, 177, 255, 0.11)',
+    level4: 'rgba(130, 177, 255, 0.12)',
+    level5: 'rgba(130, 177, 255, 0.14)',
 } as const;
 
 // Single theme export (dark only)
