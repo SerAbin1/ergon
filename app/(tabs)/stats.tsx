@@ -7,6 +7,7 @@
 import { useFocusStore } from '@/src/stores/focusStore';
 import { borderRadius, colors, spacing, typography } from '@/src/theme/tokens';
 import { ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function StatsScreen() {
     const { sessions, todaysTotalFocusTime } = useFocusStore();
@@ -37,7 +38,7 @@ export default function StatsScreen() {
     const avgDaily = weeksSessions.length > 0 ? weeklyTotal / 7 : 0;
 
     return (
-        <>
+        <SafeAreaView style={styles.safeArea} edges={['top']}>
             <StatusBar barStyle="light-content" backgroundColor={colors.surface.dim} />
             <ScrollView style={styles.container} contentContainerStyle={styles.content}>
                 <Text style={styles.title}>Your Stats</Text>
@@ -71,14 +72,17 @@ export default function StatsScreen() {
                     </Text>
                 </View>
             </ScrollView>
-        </>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    safeArea: {
         flex: 1,
         backgroundColor: colors.surface.dim,
+    },
+    container: {
+        flex: 1,
     },
     content: {
         padding: spacing.lg,

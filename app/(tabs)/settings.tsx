@@ -8,6 +8,7 @@ import { useFocusStore } from '@/src/stores/focusStore';
 import { useSettingsStore } from '@/src/stores/settingsStore';
 import { borderRadius, colors, spacing, typography } from '@/src/theme/tokens';
 import { Pressable, ScrollView, StatusBar, StyleSheet, Switch, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
     const {
@@ -24,7 +25,7 @@ export default function SettingsScreen() {
     const { activePreset, clearHistory } = useFocusStore();
 
     return (
-        <>
+        <SafeAreaView style={styles.safeArea} edges={['top']}>
             <StatusBar barStyle="light-content" backgroundColor={colors.surface.dim} />
             <ScrollView style={styles.container} contentContainerStyle={styles.content}>
                 <Text style={styles.title}>Settings</Text>
@@ -95,7 +96,7 @@ export default function SettingsScreen() {
                     </View>
                 </View>
             </ScrollView>
-        </>
+        </SafeAreaView>
     );
 }
 
@@ -131,9 +132,12 @@ function SettingRow({
 }
 
 const styles = StyleSheet.create({
-    container: {
+    safeArea: {
         flex: 1,
         backgroundColor: colors.surface.dim,
+    },
+    container: {
+        flex: 1,
     },
     content: {
         padding: spacing.lg,

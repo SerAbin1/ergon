@@ -2,7 +2,7 @@
  * Tab Layout - M3 Expressive Dark Theme
  *
  * Bottom navigation with three tabs: Focus, Stats, Settings.
- * Uses M3 navigation bar styling.
+ * Focus (index) is the default landing screen.
  */
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
@@ -39,11 +39,11 @@ export default function TabLayout() {
           fontSize: 12,
           fontWeight: '500',
         },
-        headerShown: false, // Hide header for cleaner look
+        headerShown: false,
       }}>
-      {/* Focus Timer - Main screen */}
+      {/* Focus Timer - Default landing screen (index.tsx) */}
       <Tabs.Screen
-        name="focus"
+        name="index"
         options={{
           title: 'Focus',
           tabBarIcon: ({ color }) => <TabBarIcon name="clock-o" color={color} />,
@@ -67,7 +67,7 @@ export default function TabLayout() {
       />
       {/* Hide old template screens */}
       <Tabs.Screen
-        name="index"
+        name="_old_index"
         options={{ href: null }}
       />
       <Tabs.Screen
