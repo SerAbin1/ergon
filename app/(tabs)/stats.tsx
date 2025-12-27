@@ -1,7 +1,12 @@
-import { Text, View } from '@/components/Themed';
+/**
+ * Stats Screen - M3 Expressive Dark Theme
+ *
+ * Focus statistics dashboard with summary cards.
+ * Shows daily, weekly totals and session counts.
+ */
 import { useFocusStore } from '@/src/stores/focusStore';
 import { borderRadius, colors, spacing, typography } from '@/src/theme/tokens';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 
 export default function StatsScreen() {
     const { sessions, todaysTotalFocusTime } = useFocusStore();
@@ -15,7 +20,7 @@ export default function StatsScreen() {
         return `${mins}m`;
     };
 
-    // Calculate stats
+    // Calculate statistics
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
     const todaysSessions = sessions.filter(
@@ -32,91 +37,103 @@ export default function StatsScreen() {
     const avgDaily = weeksSessions.length > 0 ? weeklyTotal / 7 : 0;
 
     return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-            <Text style={styles.title}>Your Focus Stats</Text>
+        <>
+            <StatusBar barStyle="light-content" backgroundColor={colors.surface.dim} />
+            <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+                <Text style={styles.title}>Your Stats</Text>
 
-            <View style={styles.statsGrid}>
-                <View style={styles.statCard}>
-                    <Text style={styles.statValue}>{formatTime(todaysTotalFocusTime)}</Text>
-                    <Text style={styles.statLabel}>Today's Focus</Text>
+                {/* Stats grid */}
+                <View style={styles.grid}>
+                    <View style={[styles.card, styles.cardPrimary]}>
+                        <Text style={styles.cardValue}>{formatTime(todaysTotalFocusTime)}</Text>
+                        <Text style={styles.cardLabel}>Today's Focus</Text>
+                    </View>
+                    <View style={styles.card}>
+                        <Text style={styles.cardValue}>{todaysSessions.length}</Text>
+                        <Text style={styles.cardLabel}>Sessions</Text>
+                    </View>
+                    <View style={styles.card}>
+                        <Text style={styles.cardValue}>{formatTime(weeklyTotal)}</Text>
+                        <Text style={styles.cardLabel}>This Week</Text>
+                    </View>
+                    <View style={styles.card}>
+                        <Text style={styles.cardValue}>{formatTime(Math.round(avgDaily))}</Text>
+                        <Text style={styles.cardLabel}>Daily Avg</Text>
+                    </View>
                 </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statValue}>{todaysSessions.length}</Text>
-                    <Text style={styles.statLabel}>Sessions Today</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statValue}>{formatTime(weeklyTotal)}</Text>
-                    <Text style={styles.statLabel}>This Week</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statValue}>{formatTime(Math.round(avgDaily))}</Text>
-                    <Text style={styles.statLabel}>Daily Average</Text>
-                </View>
-            </View>
 
-            <View style={styles.placeholder}>
-                <Text style={styles.placeholderText}>
-                    📊 Detailed charts coming soon
-                </Text>
-                <Text style={styles.placeholderSubtext}>
-                    Track your focus patterns over time
-                </Text>
-            </View>
-        </ScrollView>
+                {/* Placeholder for charts */}
+                <View style={styles.chartPlaceholder}>
+                    <Text style={styles.chartIcon}>📊</Text>
+                    <Text style={styles.chartTitle}>Insights coming soon</Text>
+                    <Text style={styles.chartSubtitle}>
+                        Track your focus patterns over time
+                    </Text>
+                </View>
+            </ScrollView>
+        </>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.neutral[0],
+        backgroundColor: colors.surface.dim,
     },
     content: {
         padding: spacing.lg,
     },
     title: {
-        fontSize: typography.fontSize.xl,
+        fontSize: typography.fontSize.headlineMedium,
         fontWeight: typography.fontWeight.bold,
+        color: colors.text.primary,
         marginBottom: spacing.lg,
-        color: colors.neutral[900],
     },
-    statsGrid: {
+    grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: spacing.md,
     },
-    statCard: {
+    card: {
         flex: 1,
         minWidth: '45%',
+        backgroundColor: colors.surface.container,
+        borderRadius: borderRadius.xl,
         padding: spacing.lg,
-        backgroundColor: colors.neutral[50],
-        borderRadius: borderRadius.lg,
         alignItems: 'center',
     },
-    statValue: {
-        fontSize: typography.fontSize.xxl,
-        fontWeight: typography.fontWeight.bold,
-        color: colors.primary[600],
+    cardPrimary: {
+        backgroundColor: colors.primary.container,
     },
-    statLabel: {
-        fontSize: typography.fontSize.sm,
-        color: colors.neutral[600],
+    cardValue: {
+        fontSize: typography.fontSize.headlineLarge,
+        fontWeight: typography.fontWeight.bold,
+        color: colors.text.primary,
+    },
+    cardLabel: {
+        fontSize: typography.fontSize.bodySmall,
+        color: colors.text.secondary,
         marginTop: spacing.xs,
     },
-    placeholder: {
+    chartPlaceholder: {
         marginTop: spacing.xxl,
-        padding: spacing.xl,
-        backgroundColor: colors.neutral[100],
-        borderRadius: borderRadius.lg,
+        padding: spacing.xxl,
+        backgroundColor: colors.surface.bright,
+        borderRadius: borderRadius.xl,
         alignItems: 'center',
     },
-    placeholderText: {
-        fontSize: typography.fontSize.lg,
-        color: colors.neutral[600],
+    chartIcon: {
+        fontSize: 56,
+        marginBottom: spacing.md,
     },
-    placeholderSubtext: {
-        fontSize: typography.fontSize.sm,
-        color: colors.neutral[500],
+    chartTitle: {
+        fontSize: typography.fontSize.titleMedium,
+        fontWeight: typography.fontWeight.semibold,
+        color: colors.text.secondary,
+    },
+    chartSubtitle: {
+        fontSize: typography.fontSize.bodySmall,
+        color: colors.text.tertiary,
         marginTop: spacing.xs,
     },
 });

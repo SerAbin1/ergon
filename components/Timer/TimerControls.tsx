@@ -1,7 +1,12 @@
-import { Text } from '@/components/Themed';
-import { borderRadius, colors, spacing } from '@/src/theme/tokens';
+/**
+ * TimerControls - M3 Expressive Dark Theme
+ *
+ * Control buttons for the focus timer.
+ * Uses M3 filled/tonal button styles.
+ */
+import { borderRadius, colors, spacing, typography } from '@/src/theme/tokens';
 import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 interface TimerControlsProps {
     timerState: 'idle' | 'running' | 'paused' | 'completed';
@@ -20,44 +25,31 @@ export function TimerControls({
     onReset,
     onSkip,
 }: TimerControlsProps) {
+    // Main action button (M3 filled style)
     const renderMainButton = () => {
         switch (timerState) {
             case 'idle':
                 return (
-                    <Pressable
-                        style={[styles.mainButton, styles.startButton]}
-                        onPress={onStart}
-                    >
-                        <Text style={styles.mainButtonText}>Start Focus</Text>
+                    <Pressable style={[styles.mainButton, styles.filledButton]} onPress={onStart}>
+                        <Text style={styles.filledButtonText}>Start Focus</Text>
                     </Pressable>
                 );
             case 'running':
                 return (
-                    <Pressable
-                        style={[styles.mainButton, styles.pauseButton]}
-                        onPress={onPause}
-                    >
-                        <Text style={styles.mainButtonText}>Pause</Text>
+                    <Pressable style={[styles.mainButton, styles.tonalButton]} onPress={onPause}>
+                        <Text style={styles.tonalButtonText}>Pause</Text>
                     </Pressable>
                 );
             case 'paused':
                 return (
-                    <View style={styles.pausedButtons}>
-                        <Pressable
-                            style={[styles.mainButton, styles.startButton]}
-                            onPress={onResume}
-                        >
-                            <Text style={styles.mainButtonText}>Resume</Text>
-                        </Pressable>
-                    </View>
+                    <Pressable style={[styles.mainButton, styles.filledButton]} onPress={onResume}>
+                        <Text style={styles.filledButtonText}>Resume</Text>
+                    </Pressable>
                 );
             case 'completed':
                 return (
-                    <Pressable
-                        style={[styles.mainButton, styles.startButton]}
-                        onPress={onStart}
-                    >
-                        <Text style={styles.mainButtonText}>Start Next</Text>
+                    <Pressable style={[styles.mainButton, styles.filledButton]} onPress={onStart}>
+                        <Text style={styles.filledButtonText}>Start Next</Text>
                     </Pressable>
                 );
             default:
@@ -68,15 +60,17 @@ export function TimerControls({
     return (
         <View style={styles.container}>
             {renderMainButton()}
-            <View style={styles.secondaryButtons}>
+
+            {/* Secondary actions (M3 text button style) */}
+            <View style={styles.secondaryRow}>
                 {(timerState === 'paused' || timerState === 'running') && (
-                    <Pressable style={styles.secondaryButton} onPress={onReset}>
-                        <Text style={styles.secondaryButtonText}>Reset</Text>
+                    <Pressable style={styles.textButton} onPress={onReset}>
+                        <Text style={styles.textButtonLabel}>Reset</Text>
                     </Pressable>
                 )}
                 {timerState !== 'idle' && (
-                    <Pressable style={styles.secondaryButton} onPress={onSkip}>
-                        <Text style={styles.secondaryButtonText}>Skip</Text>
+                    <Pressable style={styles.textButton} onPress={onSkip}>
+                        <Text style={styles.textButtonLabel}>Skip</Text>
                     </Pressable>
                 )}
             </View>
@@ -87,41 +81,48 @@ export function TimerControls({
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        paddingVertical: spacing.lg,
+        paddingVertical: spacing.xl,
     },
     mainButton: {
         paddingHorizontal: spacing.xxl,
         paddingVertical: spacing.md,
         borderRadius: borderRadius.full,
-        minWidth: 180,
+        minWidth: 200,
         alignItems: 'center',
     },
-    startButton: {
-        backgroundColor: colors.primary[500],
+    // M3 Filled button
+    filledButton: {
+        backgroundColor: colors.primary.main,
     },
-    pauseButton: {
-        backgroundColor: colors.neutral[700],
+    filledButtonText: {
+        color: colors.primary.onPrimary,
+        fontSize: typography.fontSize.labelLarge,
+        fontWeight: typography.fontWeight.semibold,
+        letterSpacing: typography.letterSpacing.wide,
     },
-    mainButtonText: {
-        color: colors.neutral[0],
-        fontSize: 18,
-        fontWeight: '600',
+    // M3 Tonal button
+    tonalButton: {
+        backgroundColor: colors.surface.containerHigh,
     },
-    pausedButtons: {
-        flexDirection: 'row',
-        gap: spacing.md,
+    tonalButtonText: {
+        color: colors.primary.main,
+        fontSize: typography.fontSize.labelLarge,
+        fontWeight: typography.fontWeight.semibold,
+        letterSpacing: typography.letterSpacing.wide,
     },
-    secondaryButtons: {
+    secondaryRow: {
         flexDirection: 'row',
         marginTop: spacing.md,
-        gap: spacing.lg,
+        gap: spacing.xl,
     },
-    secondaryButton: {
+    // M3 Text button
+    textButton: {
         paddingHorizontal: spacing.lg,
         paddingVertical: spacing.sm,
     },
-    secondaryButtonText: {
-        color: colors.neutral[600],
-        fontSize: 16,
+    textButtonLabel: {
+        color: colors.primary.main,
+        fontSize: typography.fontSize.labelLarge,
+        fontWeight: typography.fontWeight.medium,
     },
 });

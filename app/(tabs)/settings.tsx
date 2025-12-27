@@ -1,13 +1,16 @@
-import { Text, View } from '@/components/Themed';
+/**
+ * Settings Screen - M3 Expressive Dark Theme
+ *
+ * App preferences with M3 list item styling.
+ * Uses surface containers and segmented buttons.
+ */
 import { useFocusStore } from '@/src/stores/focusStore';
-import { ThemeMode, useSettingsStore } from '@/src/stores/settingsStore';
+import { useSettingsStore } from '@/src/stores/settingsStore';
 import { borderRadius, colors, spacing, typography } from '@/src/theme/tokens';
-import { Pressable, ScrollView, StyleSheet, Switch } from 'react-native';
+import { Pressable, ScrollView, StatusBar, StyleSheet, Switch, Text, View } from 'react-native';
 
 export default function SettingsScreen() {
     const {
-        themeMode,
-        setThemeMode,
         hapticFeedback,
         toggleHapticFeedback,
         soundEnabled,
@@ -20,224 +23,205 @@ export default function SettingsScreen() {
 
     const { activePreset, clearHistory } = useFocusStore();
 
-    const themeModes: { value: ThemeMode; label: string }[] = [
-        { value: 'system', label: 'System' },
-        { value: 'light', label: 'Light' },
-        { value: 'dark', label: 'Dark' },
-    ];
-
     return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-            <Text style={styles.title}>Settings</Text>
+        <>
+            <StatusBar barStyle="light-content" backgroundColor={colors.surface.dim} />
+            <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+                <Text style={styles.title}>Settings</Text>
 
-            {/* Appearance Section */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Appearance</Text>
-                <View style={styles.themeSelector}>
-                    {themeModes.map((mode) => (
-                        <Pressable
-                            key={mode.value}
-                            style={[
-                                styles.themeOption,
-                                themeMode === mode.value && styles.themeOptionActive,
-                            ]}
-                            onPress={() => setThemeMode(mode.value)}
-                        >
-                            <Text
-                                style={[
-                                    styles.themeOptionText,
-                                    themeMode === mode.value && styles.themeOptionTextActive,
-                                ]}
-                            >
-                                {mode.label}
-                            </Text>
-                        </Pressable>
-                    ))}
+                {/* Timer Section */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>TIMER</Text>
+                    <View style={styles.card}>
+                        <SettingRow
+                            label="Auto-start breaks"
+                            description="Start break after focus session"
+                            value={autoStartBreaks}
+                            onToggle={toggleAutoStartBreaks}
+                        />
+                        <View style={styles.divider} />
+                        <SettingRow
+                            label="Auto-start focus"
+                            description="Start focus after break"
+                            value={autoStartWork}
+                            onToggle={toggleAutoStartWork}
+                        />
+                    </View>
                 </View>
-            </View>
 
-            {/* Timer Settings */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Timer</Text>
-                <View style={styles.settingRow}>
-                    <View>
-                        <Text style={styles.settingLabel}>Auto-start breaks</Text>
-                        <Text style={styles.settingDescription}>
-                            Automatically start break after focus session
+                {/* Preset Info */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>CURRENT PRESET</Text>
+                    <View style={styles.presetCard}>
+                        <Text style={styles.presetName}>{activePreset.name}</Text>
+                        <Text style={styles.presetDetails}>
+                            {activePreset.workDuration}m focus · {activePreset.breakDuration}m break · {activePreset.longBreakDuration}m long break
                         </Text>
                     </View>
-                    <Switch
-                        value={autoStartBreaks}
-                        onValueChange={toggleAutoStartBreaks}
-                        trackColor={{ true: colors.primary[500] }}
-                    />
                 </View>
-                <View style={styles.settingRow}>
-                    <View>
-                        <Text style={styles.settingLabel}>Auto-start work</Text>
-                        <Text style={styles.settingDescription}>
-                            Automatically start focus after break
-                        </Text>
+
+                {/* Feedback Section */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>FEEDBACK</Text>
+                    <View style={styles.card}>
+                        <SettingRow
+                            label="Haptic feedback"
+                            value={hapticFeedback}
+                            onToggle={toggleHapticFeedback}
+                        />
+                        <View style={styles.divider} />
+                        <SettingRow
+                            label="Sound effects"
+                            value={soundEnabled}
+                            onToggle={toggleSoundEnabled}
+                        />
                     </View>
-                    <Switch
-                        value={autoStartWork}
-                        onValueChange={toggleAutoStartWork}
-                        trackColor={{ true: colors.primary[500] }}
-                    />
                 </View>
-            </View>
 
-            {/* Current Preset Info */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Current Preset</Text>
-                <View style={styles.presetInfo}>
-                    <Text style={styles.presetName}>{activePreset.name}</Text>
-                    <Text style={styles.presetDetails}>
-                        {activePreset.workDuration}min work • {activePreset.breakDuration}min break
-                    </Text>
+                {/* Data Section */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>DATA</Text>
+                    <Pressable style={styles.dangerButton} onPress={clearHistory}>
+                        <Text style={styles.dangerButtonText}>Clear Session History</Text>
+                    </Pressable>
                 </View>
-            </View>
 
-            {/* Feedback */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Feedback</Text>
-                <View style={styles.settingRow}>
-                    <Text style={styles.settingLabel}>Haptic feedback</Text>
-                    <Switch
-                        value={hapticFeedback}
-                        onValueChange={toggleHapticFeedback}
-                        trackColor={{ true: colors.primary[500] }}
-                    />
+                {/* About */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>ABOUT</Text>
+                    <View style={styles.card}>
+                        <Text style={styles.aboutText}>Ergon v1.0.0</Text>
+                        <Text style={styles.aboutSubtext}>Open-source digital wellbeing</Text>
+                    </View>
                 </View>
-                <View style={styles.settingRow}>
-                    <Text style={styles.settingLabel}>Sound effects</Text>
-                    <Switch
-                        value={soundEnabled}
-                        onValueChange={toggleSoundEnabled}
-                        trackColor={{ true: colors.primary[500] }}
-                    />
-                </View>
-            </View>
+            </ScrollView>
+        </>
+    );
+}
 
-            {/* Data */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Data</Text>
-                <Pressable style={styles.dangerButton} onPress={clearHistory}>
-                    <Text style={styles.dangerButtonText}>Clear Session History</Text>
-                </Pressable>
+// Setting row component
+function SettingRow({
+    label,
+    description,
+    value,
+    onToggle,
+}: {
+    label: string;
+    description?: string;
+    value: boolean;
+    onToggle: () => void;
+}) {
+    return (
+        <View style={styles.settingRow}>
+            <View style={styles.settingInfo}>
+                <Text style={styles.settingLabel}>{label}</Text>
+                {description && <Text style={styles.settingDesc}>{description}</Text>}
             </View>
-
-            {/* About */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>About</Text>
-                <Text style={styles.aboutText}>Ergon v1.0.0</Text>
-                <Text style={styles.aboutSubtext}>An open-source digital wellbeing app</Text>
-            </View>
-        </ScrollView>
+            <Switch
+                value={value}
+                onValueChange={onToggle}
+                trackColor={{
+                    false: colors.surface.containerHigh,
+                    true: colors.primary.main,
+                }}
+                thumbColor={colors.text.primary}
+            />
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.neutral[0],
+        backgroundColor: colors.surface.dim,
     },
     content: {
         padding: spacing.lg,
+        paddingBottom: spacing.xxxl,
     },
     title: {
-        fontSize: typography.fontSize.xl,
+        fontSize: typography.fontSize.headlineMedium,
         fontWeight: typography.fontWeight.bold,
+        color: colors.text.primary,
         marginBottom: spacing.lg,
-        color: colors.neutral[900],
     },
     section: {
         marginBottom: spacing.xl,
     },
     sectionTitle: {
-        fontSize: typography.fontSize.sm,
+        fontSize: typography.fontSize.labelMedium,
         fontWeight: typography.fontWeight.semibold,
-        color: colors.neutral[500],
-        textTransform: 'uppercase',
-        letterSpacing: 1,
-        marginBottom: spacing.md,
+        color: colors.text.tertiary,
+        letterSpacing: typography.letterSpacing.wider,
+        marginBottom: spacing.sm,
+        marginLeft: spacing.sm,
     },
-    themeSelector: {
-        flexDirection: 'row',
-        backgroundColor: colors.neutral[100],
-        borderRadius: borderRadius.lg,
-        padding: spacing.xs,
+    card: {
+        backgroundColor: colors.surface.container,
+        borderRadius: borderRadius.xl,
+        padding: spacing.md,
     },
-    themeOption: {
-        flex: 1,
-        paddingVertical: spacing.sm,
-        alignItems: 'center',
-        borderRadius: borderRadius.md,
-    },
-    themeOptionActive: {
-        backgroundColor: colors.neutral[0],
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
-    },
-    themeOptionText: {
-        color: colors.neutral[600],
-        fontWeight: typography.fontWeight.medium,
-    },
-    themeOptionTextActive: {
-        color: colors.neutral[900],
+    divider: {
+        height: 1,
+        backgroundColor: colors.outline.variant,
+        marginVertical: spacing.xs,
     },
     settingRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingVertical: spacing.md,
-        borderBottomWidth: 1,
-        borderBottomColor: colors.neutral[100],
+        padding: spacing.sm,
+    },
+    settingInfo: {
+        flex: 1,
+        marginRight: spacing.md,
     },
     settingLabel: {
-        fontSize: typography.fontSize.md,
-        color: colors.neutral[800],
+        fontSize: typography.fontSize.bodyLarge,
+        color: colors.text.primary,
     },
-    settingDescription: {
-        fontSize: typography.fontSize.xs,
-        color: colors.neutral[500],
+    settingDesc: {
+        fontSize: typography.fontSize.bodySmall,
+        color: colors.text.tertiary,
         marginTop: 2,
     },
-    presetInfo: {
-        padding: spacing.md,
-        backgroundColor: colors.neutral[50],
-        borderRadius: borderRadius.lg,
+    presetCard: {
+        backgroundColor: colors.primary.container,
+        borderRadius: borderRadius.xl,
+        padding: spacing.lg,
     },
     presetName: {
-        fontSize: typography.fontSize.lg,
+        fontSize: typography.fontSize.titleLarge,
         fontWeight: typography.fontWeight.semibold,
-        color: colors.neutral[900],
+        color: colors.primary.onContainer,
     },
     presetDetails: {
-        fontSize: typography.fontSize.sm,
-        color: colors.neutral[600],
+        fontSize: typography.fontSize.bodySmall,
+        color: colors.primary.onContainer,
+        opacity: 0.8,
         marginTop: spacing.xs,
     },
     dangerButton: {
+        backgroundColor: colors.error.container,
+        borderRadius: borderRadius.xl,
         padding: spacing.md,
-        backgroundColor: colors.error + '15',
-        borderRadius: borderRadius.md,
         alignItems: 'center',
     },
     dangerButtonText: {
-        color: colors.error,
+        color: colors.error.onContainer,
+        fontSize: typography.fontSize.labelLarge,
         fontWeight: typography.fontWeight.medium,
     },
     aboutText: {
-        fontSize: typography.fontSize.md,
-        color: colors.neutral[800],
+        fontSize: typography.fontSize.bodyLarge,
+        color: colors.text.primary,
+        paddingHorizontal: spacing.sm,
+        paddingTop: spacing.sm,
     },
     aboutSubtext: {
-        fontSize: typography.fontSize.sm,
-        color: colors.neutral[500],
-        marginTop: spacing.xs,
+        fontSize: typography.fontSize.bodySmall,
+        color: colors.text.tertiary,
+        paddingHorizontal: spacing.sm,
+        paddingBottom: spacing.sm,
     },
 });

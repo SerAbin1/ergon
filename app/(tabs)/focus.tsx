@@ -1,11 +1,16 @@
-import { View } from '@/components/Themed';
+/**
+ * Focus Screen - M3 Expressive Dark Theme
+ *
+ * Main Pomodoro timer screen with circular progress and controls.
+ * Core feature of the Ergon digital wellbeing app.
+ */
 import { CircularTimer } from '@/components/Timer/CircularTimer';
 import { SessionHistory } from '@/components/Timer/SessionHistory';
 import { TimerControls } from '@/components/Timer/TimerControls';
 import { useFocusStore } from '@/src/stores/focusStore';
 import { colors, spacing } from '@/src/theme/tokens';
 import React, { useEffect, useRef } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 
 export default function FocusScreen() {
     const {
@@ -23,10 +28,9 @@ export default function FocusScreen() {
         tick,
     } = useFocusStore();
 
-    // Timer interval ref
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-    // Get total time based on session type
+    // Calculate total time for current session type
     const getTotalTime = (): number => {
         switch (currentSessionType) {
             case 'work':
@@ -40,7 +44,7 @@ export default function FocusScreen() {
         }
     };
 
-    // Handle timer ticking
+    // Timer tick effect
     useEffect(() => {
         if (timerState === 'running') {
             intervalRef.current = setInterval(() => {
@@ -60,6 +64,7 @@ export default function FocusScreen() {
         };
     }, [timerState, tick]);
 
+    // Handle timer tap
     const handleTimerPress = () => {
         if (timerState === 'idle' || timerState === 'completed') {
             startTimer();
@@ -70,6 +75,7 @@ export default function FocusScreen() {
         }
     };
 
+    // Handle skip
     const handleSkip = () => {
         if (currentSessionType === 'work') {
             skipToBreak();
@@ -86,39 +92,48 @@ export default function FocusScreen() {
     );
 
     return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-            <View style={styles.timerSection}>
-                <CircularTimer
-                    timeRemaining={timeRemaining}
-                    totalTime={getTotalTime()}
-                    isRunning={timerState === 'running'}
-                    sessionType={currentSessionType}
-                    onPress={handleTimerPress}
+        <>
+            <StatusBar barStyle="light-content" backgroundColor={colors.surface.dim} />
+            <ScrollView
+                style={styles.container}
+                contentContainerStyle={styles.content}
+            >
+                {/* Timer */}
+                <View style={styles.timerSection}>
+                    <CircularTimer
+                        timeRemaining={timeRemaining}
+                        totalTime={getTotalTime()}
+                        isRunning={timerState === 'running'}
+                        sessionType={currentSessionType}
+                        onPress={handleTimerPress}
+                    />
+                </View>
+
+                {/* Controls */}
+                <TimerControls
+                    timerState={timerState}
+                    onStart={startTimer}
+                    onPause={pauseTimer}
+                    onResume={resumeTimer}
+                    onReset={resetTimer}
+                    onSkip={handleSkip}
                 />
-            </View>
 
-            <TimerControls
-                timerState={timerState}
-                onStart={startTimer}
-                onPause={pauseTimer}
-                onResume={resumeTimer}
-                onReset={resetTimer}
-                onSkip={handleSkip}
-            />
-
-            <SessionHistory sessions={todaysSessions} />
-        </ScrollView>
+                {/* Session history */}
+                <SessionHistory sessions={todaysSessions} />
+            </ScrollView>
+        </>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.neutral[0],
+        backgroundColor: colors.surface.dim,
     },
     content: {
         padding: spacing.lg,
-        paddingTop: spacing.xl,
+        paddingTop: spacing.xxl,
     },
     timerSection: {
         alignItems: 'center',

@@ -1,17 +1,21 @@
+/**
+ * CircularTimer - M3 Expressive Dark Theme
+ *
+ * Animated circular progress timer with SVG ring.
+ * Uses teal primary color and monospace font for timer display.
+ */
 import { colors, spacing, typography } from '@/src/theme/tokens';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
 
-const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-
 interface CircularTimerProps {
-    timeRemaining: number; // in seconds
-    totalTime: number; // in seconds
-    size?: number;
-    strokeWidth?: number;
-    isRunning?: boolean;
+    timeRemaining: number;  // Current time in seconds
+    totalTime: number;      // Total duration in seconds
+    size?: number;          // Diameter of the timer
+    strokeWidth?: number;   // Thickness of the progress ring
+    isRunning?: boolean;    // Animation state
     sessionType: 'work' | 'break' | 'longBreak';
     onPress?: () => void;
 }
@@ -19,8 +23,8 @@ interface CircularTimerProps {
 export function CircularTimer({
     timeRemaining,
     totalTime,
-    size = 280,
-    strokeWidth = 12,
+    size = 300,
+    strokeWidth = 8,
     isRunning = false,
     sessionType,
     onPress,
@@ -28,59 +32,61 @@ export function CircularTimer({
     const radius = (size - strokeWidth) / 2;
     const circumference = 2 * Math.PI * radius;
     const progress = totalTime > 0 ? timeRemaining / totalTime : 1;
+    const strokeDashoffset = circumference * (1 - progress);
 
-    const getColor = () => {
+    // M3 color mapping for session types
+    const getAccentColor = () => {
         switch (sessionType) {
             case 'work':
-                return colors.primary[500];
+                return colors.primary.main;
             case 'break':
-                return colors.accent[500];
+                return colors.secondary.main;
             case 'longBreak':
-                return colors.accent[700];
+                return colors.tertiary.main;
             default:
-                return colors.primary[500];
+                return colors.primary.main;
         }
     };
 
-    const strokeDashoffset = circumference * (1 - progress);
-
+    // Format time as MM:SS
     const formatTime = (seconds: number): string => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
 
+    // Session label
     const getSessionLabel = (): string => {
         switch (sessionType) {
             case 'work':
-                return 'Focus Time';
+                return 'FOCUS';
             case 'break':
-                return 'Short Break';
+                return 'SHORT BREAK';
             case 'longBreak':
-                return 'Long Break';
+                return 'LONG BREAK';
             default:
-                return 'Focus Time';
+                return 'FOCUS';
         }
     };
 
     return (
         <Pressable onPress={onPress} style={styles.container}>
             <Svg width={size} height={size} style={styles.svg}>
-                {/* Background circle */}
+                {/* Background track */}
                 <Circle
                     cx={size / 2}
                     cy={size / 2}
                     r={radius}
-                    stroke={colors.neutral[200]}
+                    stroke={colors.surface.containerHigh}
                     strokeWidth={strokeWidth}
                     fill="transparent"
                 />
-                {/* Progress circle */}
+                {/* Progress arc */}
                 <Circle
                     cx={size / 2}
                     cy={size / 2}
                     r={radius}
-                    stroke={getColor()}
+                    stroke={getAccentColor()}
                     strokeWidth={strokeWidth}
                     fill="transparent"
                     strokeDasharray={circumference}
@@ -89,15 +95,17 @@ export function CircularTimer({
                     transform={`rotate(-90 ${size / 2} ${size / 2})`}
                 />
             </Svg>
-            <View style={styles.timeContainer}>
-                <Animated.Text style={styles.sessionLabel}>
+
+            {/* Timer content */}
+            <View style={styles.content}>
+                <Animated.Text style={[styles.label, { color: getAccentColor() }]}>
                     {getSessionLabel()}
                 </Animated.Text>
-                <Animated.Text style={styles.timeText}>
+                <Animated.Text style={styles.time}>
                     {formatTime(timeRemaining)}
                 </Animated.Text>
-                <Animated.Text style={styles.tapHint}>
-                    {isRunning ? 'Tap to pause' : 'Tap to start'}
+                <Animated.Text style={styles.hint}>
+                    {isRunning ? 'tap to pause' : 'tap to start'}
                 </Animated.Text>
             </View>
         </Pressable>
@@ -112,25 +120,27 @@ const styles = StyleSheet.create({
     svg: {
         position: 'absolute',
     },
-    timeContainer: {
+    content: {
         alignItems: 'center',
         justifyContent: 'center',
     },
-    sessionLabel: {
-        fontSize: typography.fontSize.md,
-        color: colors.neutral[600],
+    label: {
+        fontSize: typography.fontSize.labelLarge,
+        fontWeight: typography.fontWeight.semibold,
+        letterSpacing: typography.letterSpacing.wider,
         marginBottom: spacing.sm,
-        fontWeight: typography.fontWeight.medium,
     },
-    timeText: {
-        fontSize: typography.fontSize.display,
+    time: {
+        fontSize: typography.fontSize.displayLarge,
         fontWeight: typography.fontWeight.bold,
-        color: colors.neutral[900],
+        color: colors.text.primary,
         fontFamily: typography.fontFamily.mono,
+        letterSpacing: typography.letterSpacing.tight,
     },
-    tapHint: {
-        fontSize: typography.fontSize.sm,
-        color: colors.neutral[400],
-        marginTop: spacing.sm,
+    hint: {
+        fontSize: typography.fontSize.bodySmall,
+        color: colors.text.tertiary,
+        marginTop: spacing.md,
+        letterSpacing: typography.letterSpacing.wide,
     },
 });
