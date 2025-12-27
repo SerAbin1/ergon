@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "energos",
-    "slug": "energos",
+    "name": "Ergon",
+    "slug": "ergon",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "energos",
+    "scheme": "ergon",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
