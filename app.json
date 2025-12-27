@@ -37,9 +37,11 @@
       "typedRoutes": true
     },
     "extra": {
+      "router": {},
       "eas": {
-        "projectId": "your-project-id"
+        "projectId": "d1453eeb-e77e-4e41-90be-c559aca96b00"
       }
-    }
+    },
+    "owner": "sonuabin"
   }
 }
